@@ -20,6 +20,30 @@ const db = mysql.createPool({
   database: process.env.DB_NAME,
 });
 
+function generateRoomCode() {
+  return Math.random().toString(36).substring(2, 8).toUpperCase();
+}
+
+app.post("/api/rooms", (req, res) => {
+  console.log("REQ BODY", req.body);
+  const roomCode = generateRoomCode();
+
+  const sql =
+    "INSERT INTO rooms (room_code, season_id, moderator_name) VALUES (?, ?, ?)";
+  const values = [roomCode, req.body.season_number, req.body.moderator_name];
+  db.query(sql, values, (err, result) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).send("Error creating room");
+    }
+    res.json({
+      message: "Room created successfully",
+      roomCode,
+      roomId: result.insertId,
+    });
+  });
+});
+
 app.listen(port, () => {
   console.log(`listening on port ${port} `);
 });
