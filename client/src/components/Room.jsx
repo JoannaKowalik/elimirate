@@ -1,10 +1,38 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { useParams } from "react-router-dom";
 
 function Room() {
+  const { roomCode } = useParams();
+  const [room, setRoom] = useState(null);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchRoom = async () => {
+      console.log("roomCode from URL:", roomCode);
+      try {
+        const url = `http://localhost:4000/api/rooms/${roomCode}`;
+        console.log("Calling API:", url);
+
+        const response = await axios.get(url);
+        console.log("API response:", response.data);
+        setRoom(response.data);
+      } catch (error) {
+        console.error("Error fetching users:", error);
+        setError("Error fetching room");
+      }
+    };
+    fetchRoom();
+  }, [roomCode]);
+  if (error) return <p>{error}</p>;
+  if (!room) return <p>Loading...</p>;
+
   return (
     <div>
       <h1>Room</h1>
-      {/* Add form or UI elements to Room */}
+
+      <div>Room Code: {room.room_code}</div>
+      <div>Moderator: {room.moderator_name}</div>
     </div>
   );
 }

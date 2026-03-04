@@ -19,6 +19,20 @@ function createRoom({ season_number, moderator_name }) {
   });
 }
 
+function getRoomByCode(roomCode) {
+  return new Promise((resolve, reject) => {
+    const sql = "SELECT * FROM rooms WHERE room_code = ?";
+
+    db.query(sql, [roomCode], (err, results) => {
+      if (err) return reject(err);
+      if (results.length === 0) return resolve(null);
+
+      resolve(results[0]);
+    });
+  });
+}
+
 module.exports = {
   createRoom,
+  getRoomByCode,
 };

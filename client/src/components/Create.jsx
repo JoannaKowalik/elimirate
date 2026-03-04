@@ -19,7 +19,7 @@ function Create() {
       .post("http://localhost:4000/api/rooms", values)
       .then((res) => {
         //redirect to room page, pass room code and mod name as props. Link popup??
-        navigate("/room", {
+        navigate("/room/" + res.data.roomCode, {
           state: {
             roomCode: res.data.roomCode,
             moderator_name: values.moderator_name,
