@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import { useParams } from "react-router-dom";
+import { getRoomByCode } from "../services/roomApi";
 
 function Room() {
   const { roomCode } = useParams();
@@ -14,7 +14,7 @@ function Room() {
         const url = `http://localhost:4000/api/rooms/${roomCode}`;
         console.log("Calling API:", url);
 
-        const response = await axios.get(url);
+        const response = await getRoomByCode(roomCode);
         console.log("API response:", response.data);
         setRoom(response.data);
       } catch (error) {
