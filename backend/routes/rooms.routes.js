@@ -6,7 +6,7 @@ const roomService = require("../services/room.service");
 
 router.get("/:roomCode", async (req, res) => {
   try {
-    console.log("roomService:", roomService); // 👈 DEBUG
+    console.log("roomService:", roomService);
     console.log("roomCode:", req.params.roomCode);
 
     const room = await roomService.getRoomByCode(req.params.roomCode);

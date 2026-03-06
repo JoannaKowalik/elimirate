@@ -6,6 +6,7 @@ const cors = require("cors");
 const path = require("path");
 //
 const roomsRoutes = require("./routes/rooms.routes");
+const playersRoutes = require("./routes/players.routes");
 // Create an instance of the Express application
 const app = express();
 const port = process.env.PORT || 4000;
@@ -15,6 +16,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use("/api/rooms/", roomsRoutes);
+app.use("/api/rooms", playersRoutes);
 
 app.listen(port, () => {
   console.log(`listening on port ${port} `);
