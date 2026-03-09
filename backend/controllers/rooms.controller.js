@@ -2,6 +2,7 @@ const roomService = require("../services/room.service");
 
 async function createRoom(req, res) {
   try {
+    console.log("Request body:", req.body);
     const room = await roomService.createRoom(req.body);
 
     res.json({
@@ -32,7 +33,25 @@ async function getRoomByCode(req, res) {
   }
 }
 
+async function getRoomSeason(req, res) {
+  try {
+    const season = await roomService.getRoomSeason(req.params.roomId);
+
+    if (!season) {
+      return res
+        .status(404)
+        .json({ message: "Season not found for this room" });
+    }
+
+    res.json(season);
+  } catch (err) {
+    console.error("Error fetching season:", err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+}
+
 module.exports = {
   createRoom,
   getRoomByCode,
+  getRoomSeason,
 };
