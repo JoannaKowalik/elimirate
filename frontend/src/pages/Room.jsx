@@ -32,7 +32,6 @@ function Room() {
       <h1>Room</h1>
 
       <div>Room Code: {room.room_code}</div>
-      <div>Moderator: {room.moderator_name}</div>
     </div>
   );
 }

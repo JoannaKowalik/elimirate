@@ -1,10 +1,10 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Home from "./components/Home";
-import Create from "./components/Create";
-import Predictions from "./components/Predictions";
-import Room from "./components/Room";
-import Register from "./components/Register";
+import Home from "./pages/Home";
+import Create from "./pages/Create";
+import Predictions from "./pages/Predictions";
+import Room from "./pages/Room";
+import Register from "./pages/Register";
 
 function App() {
   return (
@@ -13,7 +13,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/create" element={<Create />} />
         <Route path="/room/:roomCode" element={<Room />} />
-        <Route path="/predictions" element={<Predictions />} />
+        <Route path="/room/:roomCode/predictions" element={<Predictions />} />
         <Route path="/register" element={<Register />} />
       </Routes>
     </Router>

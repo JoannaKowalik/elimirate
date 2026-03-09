@@ -16,7 +16,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use("/api/rooms/", roomsRoutes);
-app.use("/api/rooms", playersRoutes);
+app.use("/api/players", playersRoutes);
 
 app.listen(port, () => {
   console.log(`listening on port ${port} `);

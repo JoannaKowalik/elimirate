@@ -1,14 +1,15 @@
 const db = require("../config/db");
 const generateRoomCode = require("../utils/generateRoomCode");
-const createPlayer = require("./player.service").createPlayer;
+//const createPlayer = require("./player.service").createPlayer;
 
 function createRoom({ season_number, moderator_name }) {
+  //don't pass season id but rather pull from seasons table based on season number???
   return new Promise((resolve, reject) => {
     const roomCode = generateRoomCode();
 
     const insertRoomSql =
       "INSERT INTO rooms (room_code, season_id) VALUES (?, ?)";
-
+    //callback hrll
     db.query(insertRoomSql, [roomCode, season_number], (err, roomResult) => {
       if (err) return reject(err);
 
@@ -45,6 +46,7 @@ function createRoom({ season_number, moderator_name }) {
     });
   });
 }
+
 function getRoomByCode(roomCode) {
   return new Promise((resolve, reject) => {
     const sql = "SELECT * FROM rooms WHERE room_code = ?";
@@ -58,12 +60,14 @@ function getRoomByCode(roomCode) {
   });
 }
 
+/*
+
 function getRoomSeason(roomId) {
   return new Promise((resolve, reject) => {
     const sql = `
       SELECT s.*
       FROM seasons s
-      JOIN rooms r ON s.season_id = r.season_id
+      JOIN rooms r ON s.id = r.season_id
       WHERE r.room_id = ?
     `;
 
@@ -76,8 +80,25 @@ function getRoomSeason(roomId) {
   });
 }
 
+*/
+
+function getContestantsByRoomId(roomId) {
+  return new Promise((resolve, reject) => {
+    const sql = `SELECT contestant.name FROM contestant
+  JOIN contestants ON contestants.contestant_id = contestant.id
+  JOIN rooms ON contestants.season_id = rooms.season_id
+  WHERE rooms.room_code = ?`; //add photo to database?
+
+    db.query(sql, [roomId], (err, results) => {
+      if (err) return reject(err);
+      if (results.length === 0) return resolve([]); //return empty array
+      resolve(results);
+    });
+  });
+}
 module.exports = {
   createRoom,
   getRoomByCode,
-  getRoomSeason,
+  //getRoomSeason,
+  getContestantsByRoomId,
 };

@@ -33,6 +33,7 @@ async function getRoomByCode(req, res) {
   }
 }
 
+/*
 async function getRoomSeason(req, res) {
   try {
     const season = await roomService.getRoomSeason(req.params.roomId);
@@ -48,10 +49,30 @@ async function getRoomSeason(req, res) {
     console.error("Error fetching season:", err);
     res.status(500).json({ message: "Internal server error" });
   }
+}*/
+
+async function getContestantsByRoomId(req, res) {
+  try {
+    const contestants = await roomService.getContestantsByRoomId(
+      req.params.roomId,
+    );
+
+    if (!contestants) {
+      return res
+        .status(404)
+        .json({ message: "Contestants not found for this room" });
+    }
+
+    res.json(contestants);
+  } catch (err) {
+    console.error("Error fetching contestants:", err);
+    res.status(500).json({ message: "Internal server error" });
+  }
 }
 
 module.exports = {
   createRoom,
   getRoomByCode,
-  getRoomSeason,
+  //getRoomSeason,
+  getContestantsByRoomId,
 };
