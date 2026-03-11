@@ -65,7 +65,7 @@ function getRoomByCode(roomCode) {
 function getRoomSeason(roomId) {
   return new Promise((resolve, reject) => {
     const sql = `
-      SELECT s.*
+      SELECT s.season_number
       FROM seasons s
       JOIN rooms r ON s.id = r.season_id
       WHERE r.room_id = ?
@@ -82,14 +82,14 @@ function getRoomSeason(roomId) {
 
 */
 
-function getContestantsByRoomId(roomId) {
+function getContestantsByRoomCode(roomCode) {
   return new Promise((resolve, reject) => {
-    const sql = `SELECT contestant.name FROM contestant
+    const sql = `SELECT contestant.name, contestant.id FROM contestant
   JOIN contestants ON contestants.contestant_id = contestant.id
   JOIN rooms ON contestants.season_id = rooms.season_id
   WHERE rooms.room_code = ?`; //add photo to database?
 
-    db.query(sql, [roomId], (err, results) => {
+    db.query(sql, [roomCode], (err, results) => {
       if (err) return reject(err);
       if (results.length === 0) return resolve([]); //return empty array
       resolve(results);
@@ -100,5 +100,5 @@ module.exports = {
   createRoom,
   getRoomByCode,
   //getRoomSeason,
-  getContestantsByRoomId,
+  getContestantsByRoomCode,
 };

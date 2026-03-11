@@ -1,14 +1,27 @@
 const db = require("../config/db");
 
-function createPlayer({ display_name, room_id }) {
+function createPlayer({ display_name, room_code }) {
   return new Promise((resolve, reject) => {
-    const sql = "INSERT INTO players (display_name, room_id) VALUES (?, ?)";
+    //get room id from room code
+    const getRoomSql = "SELECT id FROM rooms WHERE room_code = ?";
 
-    db.query(sql, [display_name, room_id], (err, result) => {
+    db.query(getRoomSql, [room_code], (err, results) => {
       if (err) return reject(err);
+      if (results.length === 0)
+        return reject(new Error("Room not found for code: " + room_code));
 
-      resolve({
-        playerId: result.insertId,
+      const room_id = results[0].id;
+      //insert player into database
+      const sql = "INSERT INTO players (display_name, room_id) VALUES (?, ?)";
+
+      db.query(sql, [display_name, room_id], (err, result) => {
+        if (err) return reject(err);
+
+        resolve({
+          playerId: result.insertId,
+          display_name,
+          room_id,
+        });
       });
     });
   });

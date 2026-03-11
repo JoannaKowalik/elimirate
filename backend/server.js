@@ -7,6 +7,7 @@ const path = require("path");
 //
 const roomsRoutes = require("./routes/rooms.routes");
 const playersRoutes = require("./routes/players.routes");
+const predictionsRoutes = require("./routes/predictions.routes");
 // Create an instance of the Express application
 const app = express();
 const port = process.env.PORT || 4000;
@@ -17,6 +18,7 @@ app.use(express.json());
 
 app.use("/api/rooms/", roomsRoutes);
 app.use("/api/players", playersRoutes);
+app.use("/api/rooms", predictionsRoutes);
 
 app.listen(port, () => {
   console.log(`listening on port ${port} `);

@@ -51,11 +51,11 @@ async function getRoomSeason(req, res) {
   }
 }*/
 
-async function getContestantsByRoomId(req, res) {
+async function getContestantsByRoomCode(req, res) {
   try {
-    const contestants = await roomService.getContestantsByRoomId(
-      req.params.roomId,
-    );
+    const { roomCode } = req.params;
+    console.log("Fetching contestants for room code:", roomCode);
+    const contestants = await roomService.getContestantsByRoomCode(roomCode);
 
     if (!contestants) {
       return res
@@ -74,5 +74,5 @@ module.exports = {
   createRoom,
   getRoomByCode,
   //getRoomSeason,
-  getContestantsByRoomId,
+  getContestantsByRoomCode,
 };
