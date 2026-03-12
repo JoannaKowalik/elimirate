@@ -8,9 +8,9 @@ export const getContestantsByRoomCode = (roomCode) => {
   return axios.get(`http://localhost:4000/api/rooms/${roomCode}/contestants`);
 };
 
-export const submitPredictions = (roomCode, predictions) => {
+export const submitPredictions = (roomCode, passedData) => {
   return axios.post(
     `http://localhost:4000/api/rooms/${roomCode}/predictions`,
-    predictions,
+    passedData,
   );
 };

@@ -13,13 +13,13 @@ function Create() {
 
   function handleSubmit(e) {
     e.preventDefault();
-    //generate id and room code, timestamp
+    //generate id and room code
     //send to backend, create room in db
     axios
       .post("http://localhost:4000/api/rooms", values)
       .then((res) => {
-        //redirect to room page, pass room code and mod name as props. Link popup??
-        navigate("/room/" + res.data.roomCode, {
+        //redirect to prediction page, pass room code and mod name as props. Link popup??
+        navigate("/room/" + res.data.roomCode + "/predictions/", {
           state: {
             roomCode: res.data.roomCode,
             moderator_name: values.moderator_name,

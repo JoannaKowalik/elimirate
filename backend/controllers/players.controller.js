@@ -11,13 +11,13 @@ async function addPlayer(req, res) {
       return res.status(404).json({ message: "Room not found" });
     }
 
-    const playerId = await playerService.createPlayer({
+    const player_id = await playerService.createPlayer({
       display_name,
       room_id: room.id,
     });
 
     res.status(201).json({
-      playerId,
+      player_id,
     });
   } catch (err) {
     console.error("Add player error:", err);

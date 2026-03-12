@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import axios from "axios";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
+
 import {
   getContestantsByRoomCode,
   submitPredictions,
@@ -8,6 +8,8 @@ import {
 
 function Predictions() {
   const { roomCode } = useParams();
+  const location = useLocation();
+  const moderator_name = location.state?.moderator_name || null;
   const navigate = useNavigate();
   const [contestants, setContestants] = useState([]);
   const [error, setError] = useState(null);
@@ -16,6 +18,7 @@ function Predictions() {
     predictions: [], //array of contestant ids from best (1) to worst (number od contestants)
   });
 
+  //use if drag&drop, else update array on input change
   const handleInputChange = (contestantId, position) => {
     setValues((prev) => {
       const updated = [...prev.predictions];
@@ -37,19 +40,26 @@ function Predictions() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    /*
     if (values.predictions.length !== contestants.length) {
       alert("Please rank all contestants before submitting.");
       return;
     }
+      */
+
+    const passedData = {
+      display_name: moderator_name || values.display_name,
+      predictions: values.predictions,
+      moderator_name: moderator_name,
+    };
 
     try {
-      console.log("Submitting:", { ...values, roomCode });
-      const res = await submitPredictions(roomCode, values);
+      //console.log("Submitting:", { ...values, roomCode });
+      const res = await submitPredictions(roomCode, passedData);
       console.log(res.data);
 
       navigate("/room/" + roomCode, {
-        state: { ...values },
+        state: { moderator_name },
       });
     } catch (err) {
       console.error("Error submitting predictions:", err);
@@ -71,43 +81,71 @@ function Predictions() {
   }, [roomCode]);
 
   if (error) return <p>{error}</p>;
-  if (!contestants) return <p>Loading...</p>;
+  if (contestants.length === 0) return <p>Loading...</p>;
+
+  function renderNameInput() {
+    if (moderator_name) {
+      return (
+        <div>
+          <p>Hi {moderator_name}!</p>
+        </div>
+      );
+    } else {
+      return (
+        <div>
+          <label htmlFor="display_name">Your name:</label>
+          <input
+            type="text"
+            value={values.display_name}
+            required
+            onChange={(e) =>
+              setValues({ ...values, display_name: e.target.value })
+            }
+          />
+        </div>
+      );
+    }
+  }
 
   return (
     <div>
       <h1>Input Predictions</h1>
 
       <form onSubmit={handleSubmit}>
-        <label htmlFor="display_name">Your name:</label>
+        {renderNameInput()}
+        {/* <label htmlFor="display_name">Your name:</label>
         <input
           type="text"
           value={values.display_name}
-          //id="display_name"
-          //name="display_name"
           required
           onChange={(e) =>
             setValues({ ...values, display_name: e.target.value })
           }
-        />
+        /> */}
 
         <label htmlFor="predicted_position">Your predictions:</label>
         <ol>
-          {contestants.map((contestant) => (
-            <li key={contestant.id}>
-              {contestant.name}
-              {""}
+          {contestants.map(
+            (
+              contestant, //map alphabetically
+            ) => (
+              <li key={contestant.id}>
+                {contestant.name}
+                {""}
 
-              <input
-                type="number"
-                min="1"
-                max={contestants.length}
-                required
-                onChange={(e) =>
-                  handleInputChange(contestant.id, parseInt(e.target.value))
-                }
-              />
-            </li>
-          ))}
+                <input
+                  type="number"
+                  defaultValue={"1"}
+                  min="1"
+                  max={contestants.length}
+                  required
+                  onChange={(e) =>
+                    handleInputChange(contestant.id, parseInt(e.target.value))
+                  }
+                />
+              </li>
+            ),
+          )}
         </ol>
         <button type="submit">Submit!</button>
       </form>

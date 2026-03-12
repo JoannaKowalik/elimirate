@@ -4,7 +4,7 @@ const playerService = require("../services/player.service");
 async function addPrediction(req, res) {
   try {
     const { roomCode } = req.params;
-    const { display_name, predictions } = req.body;
+    const { display_name, predictions, moderator_name } = req.body;
     console.log("Received prediction data:", req.body);
 
     if (!display_name || !predictions || predictions.length === 0) {
@@ -12,14 +12,24 @@ async function addPrediction(req, res) {
         .status(400)
         .json({ message: "Missing display name or predictions" });
     }
+    //if passed moderator name, don't create player, just add predictions to existing moderator player id
 
-    const player = await playerService.createPlayer({
-      display_name,
-      room_code: roomCode,
-    });
-    console.log("Created player:", player);
+    let player;
 
-    const player_id = player.playerId;
+    if (!moderator_name) {
+      player = await playerService.createPlayer({
+        display_name,
+        room_code: roomCode,
+      });
+      console.log("Created player:", player);
+    } else {
+      player = await playerService.getPlayerByNameAndRoom(
+        moderator_name,
+        roomCode,
+      );
+    }
+
+    const player_id = player.id || player.player_id; // Handle both player or moderator id
 
     for (const prediction of predictions) {
       if (!prediction.contestant_id || !prediction.predicted_position) continue;
