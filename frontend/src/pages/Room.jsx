@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getRoomByCode } from "../services/roomApi";
+import { getRoomByCode, getPlayerNameByRoomAndName } from "../services/roomApi";
 
 function Room() {
-  const { roomCode } = useParams();
+  const { roomCode, playerName } = useParams();
   const [room, setRoom] = useState(null);
+  const [player, setPlayer] = useState(null);
   const [error, setError] = useState(null);
 
   useEffect(() => {
@@ -24,6 +25,24 @@ function Room() {
     };
     fetchRoom();
   }, [roomCode]);
+
+  useEffect(() => {
+    const fetchPlayer = async () => {
+      try {
+        const url = `http://localhost:4000/api/rooms/${roomCode}/players/${playerName}`;
+        console.log("Calling API:", url);
+
+        const response = await getPlayerNameByRoomAndName(roomCode, playerName);
+        console.log("API response:", response.data);
+        setPlayer(response.data);
+      } catch (error) {
+        console.error("Error fetching users:", error);
+        setError("Error fetching room");
+      }
+    };
+    fetchPlayer();
+  }, [roomCode, playerName]);
+
   if (error) return <p>{error}</p>;
   if (!room) return <p>Loading...</p>;
 
@@ -32,6 +51,7 @@ function Room() {
       <h1>Room</h1>
 
       <div>Room Code: {room.room_code}</div>
+      <div>Player Name: {player?.name}</div>
     </div>
   );
 }

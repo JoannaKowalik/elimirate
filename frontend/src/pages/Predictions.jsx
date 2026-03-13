@@ -135,7 +135,6 @@ function Predictions() {
 
                 <input
                   type="number"
-                  defaultValue={"1"}
                   min="1"
                   max={contestants.length}
                   required

@@ -14,3 +14,9 @@ export const submitPredictions = (roomCode, passedData) => {
     passedData,
   );
 };
+
+export const getPlayerNameByRoomAndName = (roomCode, playerName) => {
+  return axios.get(
+    `http://localhost:4000/api/rooms/${roomCode}/players/${playerName}`,
+  );
+};

@@ -40,7 +40,7 @@ function getPlayerById(playerId) {
   });
 }
 
-function getPlayerByNameAndRoom(display_name, roomCode) {
+function getPlayerIdByNameAndRoom(display_name, roomCode) {
   return new Promise((resolve, reject) => {
     const sql =
       "SELECT players.id FROM players JOIN rooms ON players.room_id = rooms.id WHERE players.display_name = ? AND rooms.room_code = ?";
@@ -57,5 +57,5 @@ function getPlayerByNameAndRoom(display_name, roomCode) {
 module.exports = {
   createPlayer,
   getPlayerById,
-  getPlayerByNameAndRoom,
+  getPlayerIdByNameAndRoom,
 };

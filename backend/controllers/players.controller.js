@@ -24,7 +24,25 @@ async function addPlayer(req, res) {
     res.status(500).json({ message: "Failed to add player" });
   }
 }
+/*
+async function getPlayerNameByRoomAndName(req, res) {
+  try {
+    const { roomCode, playerName } = req.params;
+    const player = await playerService.getPlayerByRoomAndName(
+      roomCode,
+      playerName,
+    );
+    if (!player) {
+      return res.status(404).json({ message: "Player not found" });
+    }
+    res.json(player);
+  } catch (err) {
+    console.error("Get player error:", err);
+    res.status(500).json({ message: "Failed to get player" });
+  }
+}*/
 
 module.exports = {
   addPlayer,
+  //getPlayerNameByRoomAndName,
 };
