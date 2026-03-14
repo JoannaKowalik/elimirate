@@ -56,11 +56,11 @@ function Predictions() {
     try {
       //console.log("Submitting:", { ...values, roomCode });
       const res = await submitPredictions(roomCode, passedData);
-      console.log(res.data);
-
-      navigate("/room/" + roomCode, {
+      console.log("Response from submitPredictions:", res.data);
+      navigate("/room/" + roomCode + "/players/" + res.data.player_id, {
         state: { moderator_name },
       });
+      console.log(res.data);
     } catch (err) {
       console.error("Error submitting predictions:", err);
       setError("Failed to submit predictions");
@@ -135,7 +135,6 @@ function Predictions() {
 
                 <input
                   type="number"
-                  defaultValue={"1"}
                   min="1"
                   max={contestants.length}
                   required

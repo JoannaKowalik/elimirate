@@ -13,6 +13,7 @@ function addPrediction({ player_id, contestant_id, predicted_position }) {
 
         resolve({
           predictionId: result.insertId,
+          player_id,
         });
       },
     );

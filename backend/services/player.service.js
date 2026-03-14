@@ -26,10 +26,10 @@ function createPlayer({ display_name, room_code }) {
     });
   });
 }
-
+//unnecessary?
 function getPlayerById(playerId) {
   return new Promise((resolve, reject) => {
-    const sql = "SELECT * FROM players WHERE player_id = ?";
+    const sql = "SELECT * FROM players WHERE id = ?";
 
     db.query(sql, [playerId], (err, results) => {
       if (err) return reject(err);
@@ -40,6 +40,16 @@ function getPlayerById(playerId) {
   });
 }
 
+function getPlayerPredictions(playerId) {
+  return new Promise((resolve, reject) => {
+    const sql =
+      "SELECT contestant.name, contestant.id, predictions.predicted_position FROM predictions JOIN contestant ON predictions.contestant_id = contestant.id WHERE player_id = ? ORDER BY predictions.predicted_position ASC";
+    db.query(sql, [playerId], (err, results) => {
+      if (err) return reject(err);
+      resolve(results);
+    });
+  });
+}
 function getPlayerByNameAndRoom(display_name, roomCode) {
   return new Promise((resolve, reject) => {
     const sql =
@@ -54,8 +64,22 @@ function getPlayerByNameAndRoom(display_name, roomCode) {
   });
 }
 
+function getPlayersByRoom(roomCode) {
+  return new Promise((resolve, reject) => {
+    const sql =
+      "SELECT players.display_name FROM players JOIN rooms ON players.room_id = rooms.id WHERE rooms.room_code = ?";
+
+    db.query(sql, [roomCode], (err, results) => {
+      if (err) return reject(err);
+      resolve(results);
+    });
+  });
+}
+
 module.exports = {
   createPlayer,
   getPlayerById,
   getPlayerByNameAndRoom,
+  getPlayersByRoom,
+  getPlayerPredictions,
 };

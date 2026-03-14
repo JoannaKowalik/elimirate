@@ -14,3 +14,13 @@ export const submitPredictions = (roomCode, passedData) => {
     passedData,
   );
 };
+//unnecessary?
+export const getPlayersByRoom = (roomCode) => {
+  return axios.get(`http://localhost:4000/api/rooms/${roomCode}/players`);
+};
+
+export const getPlayerPredictions = (roomCode, playerId) => {
+  return axios.get(
+    `http://localhost:4000/api/rooms/${roomCode}/players/${playerId}/predictions`,
+  );
+};

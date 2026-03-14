@@ -43,6 +43,7 @@ async function addPrediction(req, res) {
 
     res.json({
       message: "Prediction added successfully",
+      player_id: player_id,
     });
   } catch (error) {
     console.error("Error adding prediction:", error);
@@ -50,6 +51,23 @@ async function addPrediction(req, res) {
   }
 }
 
+async function getPlayerPredictions(req, res) {
+  try {
+    const { playerId } = req.params;
+    const predictions = await playerService.getPlayerPredictions(playerId);
+    const player = await playerService.getPlayerById(playerId);
+
+    res.json({
+      predictions,
+      display_name: player.display_name,
+    });
+  } catch (error) {
+    console.error("Error fetching predictions:", error);
+    res.status(500).json({ message: "Error fetching predictions", error });
+  }
+}
+
 module.exports = {
   addPrediction,
+  getPlayerPredictions,
 };
