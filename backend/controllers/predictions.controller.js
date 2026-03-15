@@ -67,6 +67,7 @@ async function getPlayerPredictions(req, res) {
   }
 }
 
+
 module.exports = {
   addPrediction,
   getPlayerPredictions,
