@@ -4,6 +4,7 @@ import {
   getRoomByCode,
   //getPlayersByRoom,
   getPlayerPredictions,
+  getScores,
 } from "../services/roomApi";
 
 function Room() {
@@ -13,6 +14,7 @@ function Room() {
   const [playerName, setPlayerName] = useState(null);
   //const [players, setPlayers] = useState([]);
   const [predictions, setPredictions] = useState([]);
+  const [scores, setScores] = useState([]);
 
   useEffect(() => {
     const fetchRoom = async () => {
@@ -52,9 +54,20 @@ function Room() {
         console.error("Error fetching players:", error);
       }
     };*/
+
+    const fetchScores = async () => {
+      try {
+        const response = await getScores(roomCode);
+        console.log("API response for scores:", response.data);
+        setScores(response.data.scores);
+      } catch (error) {
+        console.error("Error fetching scores:", error);
+      }
+    };
     fetchRoom();
     fetchPredictions();
     //fetchPlayers();
+    fetchScores();
   }, [roomCode, playerId]);
   if (error) return <p>{error}</p>;
   if (!room) return <p>Loading...</p>;
@@ -77,6 +90,31 @@ function Room() {
           ),
         )}
       </ol>
+      <h2>Scores</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Player</th>
+            <th>Contestant</th>
+            <th>Episode</th>
+            <th>Actual Position</th>
+            <th>Predicted Position</th>
+            <th>Penalty Points</th>
+          </tr>
+        </thead>
+        <tbody>
+          {scores.map((score, index) => (
+            <tr key={index}>
+              <td>{score.display_name}</td>
+              <td>{score.name}</td>
+              <td>{score.episode_number}</td>
+              <td>{score.actual_position}</td>
+              <td>{score.predicted_position}</td>
+              <td>{score.penalty_points}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 }
