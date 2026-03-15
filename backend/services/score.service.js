@@ -7,8 +7,12 @@ function getScores(roomCode) {
 
     db.query(sql, [roomCode], (err, results) => {
       if (err) return reject(err);
-
-      resolve(results);
+      const total_scores =
+        "SELECT players.display_name, SUM(ABS(eliminations.actual_position - predictions.predicted_position)) AS total_score FROM predictions JOIN players ON predictions.player_id = players.id JOIN contestants ON predictions.contestant_id = contestants.contestant_id JOIN eliminations ON eliminations.contestant_id = contestants.contestant_id JOIN episodes ON eliminations.episode_id = episodes.id JOIN rooms ON players.room_id = rooms.id WHERE rooms.room_code = ? GROUP BY players.display_name ORDER BY total_score";
+      db.query(total_scores, [roomCode], (err, totalResults) => {
+        if (err) return reject(err);
+        resolve({ results, totalResults });
+      });
     });
   });
 }
