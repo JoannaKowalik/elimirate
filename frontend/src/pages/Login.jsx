@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { getPlayerIdByNameAndRoom } from "../services/roomApi";
 
 function Login() {
   const [values, setValues] = useState({
@@ -8,10 +9,16 @@ function Login() {
   });
   const navigate = useNavigate();
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
     try {
-      navigate("/room/" + values.roomCode + "/player/" + values.player_name, {
+      const res = await getPlayerIdByNameAndRoom(
+        values.player_name,
+        values.roomCode,
+      );
+
+      const player_id = res.data.player_id;
+      navigate("/room/" + values.roomCode + "/players/" + player_id, {
         //player_id!!!
         state: {
           roomCode: values.roomCode,

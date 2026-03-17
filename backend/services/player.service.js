@@ -50,6 +50,20 @@ function getPlayerPredictions(playerId) {
     });
   });
 }
+function getPlayerIdByNameAndRoom(display_name, roomCode) {
+  return new Promise((resolve, reject) => {
+    const sql =
+      "SELECT players.id FROM players JOIN rooms ON players.room_id = rooms.id WHERE players.display_name = ? AND rooms.room_code = ?";
+
+    db.query(sql, [display_name, roomCode], (err, results) => {
+      if (err) return reject(err);
+      if (results.length === 0) return resolve(null);
+
+      resolve(results[0].id);
+    });
+  });
+}
+
 function getPlayerByNameAndRoom(display_name, roomCode) {
   return new Promise((resolve, reject) => {
     const sql =
@@ -79,6 +93,7 @@ function getPlayersByRoom(roomCode) {
 module.exports = {
   createPlayer,
   getPlayerById,
+  getPlayerIdByNameAndRoom,
   getPlayerByNameAndRoom,
   getPlayersByRoom,
   getPlayerPredictions,

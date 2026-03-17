@@ -25,6 +25,28 @@ async function addPlayer(req, res) {
   }
 }
 
+async function getPlayerIdByNameAndRoom(req, res) {
+  try {
+    const { roomCode } = req.params;
+    const { display_name } = req.query;
+
+    const player_id = await playerService.getPlayerIdByNameAndRoom(
+      display_name,
+      roomCode,
+    );
+
+    if (!player_id) {
+      return res.status(404).json({ message: "Player not found" });
+    }
+
+    res.json({ player_id: player_id });
+  } catch (err) {
+    console.error("Get player ID error:", err);
+    res.status(500).json({ message: "Failed to get player ID" });
+  }
+}
+
 module.exports = {
   addPlayer,
+  getPlayerIdByNameAndRoom,
 };

@@ -28,3 +28,11 @@ export const getPlayerPredictions = (roomCode, playerId) => {
 export const getScores = (roomCode) => {
   return axios.get(`http://localhost:4000/api/rooms/${roomCode}/scores`);
 };
+
+export const getPlayerIdByNameAndRoom = (display_name, roomCode) => {
+  return axios.get(`http://localhost:4000/api/rooms/${roomCode}/players/id`, {
+    params: {
+      display_name,
+    },
+  });
+};
