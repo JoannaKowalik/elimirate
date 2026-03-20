@@ -36,3 +36,9 @@ export const getPlayerIdByNameAndRoom = (display_name, roomCode) => {
     },
   });
 };
+
+export const getRevealIndex = (roomCode) =>
+  axios.get(`http://localhost:4000/api/rooms/${roomCode}/reveal-index`);
+
+export const revealNext = (roomCode) =>
+  axios.post(`http://localhost:4000/api/rooms/${roomCode}/reveal-next`);

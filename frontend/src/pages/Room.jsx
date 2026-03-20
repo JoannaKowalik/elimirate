@@ -5,6 +5,8 @@ import {
   //getPlayersByRoom,
   getPlayerPredictions,
   getScores,
+  getRevealIndex,
+  revealNext,
 } from "../services/roomApi";
 
 function Room() {
@@ -16,6 +18,7 @@ function Room() {
   const [predictions, setPredictions] = useState([]);
   const [scores, setScores] = useState([]);
   const [totalScores, setTotalScores] = useState([]);
+  const [revealIndex, setRevealIndex] = useState(0);
 
   useEffect(() => {
     const fetchRoom = async () => {
@@ -66,13 +69,43 @@ function Room() {
         console.error("Error fetching scores:", error);
       }
     };
+
+    const fetchRevealIndex = async () => {
+      try {
+        const response = await getRevealIndex(roomCode);
+        setRevealIndex(response.data.revealIndex);
+      } catch (error) {
+        console.error("Error fetching reveal index:", error);
+      }
+    };
+
     fetchRoom();
     fetchPredictions();
     //fetchPlayers();
     fetchScores();
+    fetchRevealIndex();
   }, [roomCode, playerId]);
   if (error) return <p>{error}</p>;
   if (!room) return <p>Loading...</p>;
+
+  const groupedScores = Object.values(
+    scores.reduce((acc, score) => {
+      if (!acc[score.contestant_id]) {
+        acc[score.contestant_id] = [];
+      }
+      acc[score.contestant_id].push(score);
+      return acc;
+    }, {}),
+  );
+
+  const handleRevealNext = async () => {
+    try {
+      const response = await revealNext(roomCode);
+      setRevealIndex(response.data.revealIndex);
+    } catch (error) {
+      console.error("Error revealing next:", error);
+    }
+  };
 
   return (
     <div>
@@ -92,6 +125,9 @@ function Room() {
         )}
       </ol>
       <h2>Scores</h2>
+      {room.moderator_player === Number(playerId) && (
+        <button onClick={handleRevealNext}>Reveal Next Contestant</button>
+      )}
       <table>
         <thead>
           <tr>
@@ -104,16 +140,18 @@ function Room() {
           </tr>
         </thead>
         <tbody>
-          {scores.map((score, index) => (
-            <tr key={index}>
-              <td>{score.display_name}</td>
-              <td>{score.name}</td>
-              <td>{score.episode_number}</td>
-              <td>{score.actual_position}</td>
-              <td>{score.predicted_position}</td>
-              <td>{score.penalty_points}</td>
-            </tr>
-          ))}
+          {groupedScores.slice(0, revealIndex + 1).map((group, groupIndex) =>
+            group.map((score, index) => (
+              <tr key={`${groupIndex}-${index}`}>
+                <td>{score.display_name}</td>
+                <td>{score.name}</td>
+                <td>{score.episode_number}</td>
+                <td>{score.actual_position}</td>
+                <td>{score.predicted_position}</td>
+                <td>{score.penalty_points}</td>
+              </tr>
+            )),
+          )}
         </tbody>
       </table>
       <h2>Total Scores</h2>

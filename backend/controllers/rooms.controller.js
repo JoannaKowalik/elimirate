@@ -33,6 +33,24 @@ async function getRoomByCode(req, res) {
   }
 }
 
+async function getRoomIdByCode(req, res) {
+  try {
+    console.log("roomService:", roomService);
+    console.log("roomCode:", req.params.roomCode);
+
+    const roomId = await roomService.getRoomIdByCode(req.params.roomCode);
+
+    if (!roomId) {
+      return res.status(404).json({ message: "Room ID not found" });
+    }
+
+    res.json(roomId);
+  } catch (err) {
+    console.error("Error fetching room ID:", err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+}
+
 /*
 async function getRoomSeason(req, res) {
   try {
@@ -75,4 +93,5 @@ module.exports = {
   getRoomByCode,
   //getRoomSeason,
   getContestantsByRoomCode,
+  getRoomIdByCode,
 };
