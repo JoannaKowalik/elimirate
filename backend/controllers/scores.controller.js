@@ -18,6 +18,20 @@ async function getScores(req, res) {
   }
 }
 
+async function revealNext(req, res) {
+  try {
+    const { roomCode } = req.params;
+
+    await scoreService.revealNext(roomCode);
+
+    res.json({ message: "Reveal successful" });
+  } catch (err) {
+    console.error(err); // 👈 keep this for debugging
+    res.status(400).json({ error: err.message });
+  }
+}
+
 module.exports = {
   getScores,
+  revealNext,
 };

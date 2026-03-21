@@ -2,6 +2,7 @@ const db = require("../config/db");
 const generateRoomCode = require("../utils/generateRoomCode");
 //const createPlayer = require("./player.service").createPlayer;
 
+/*
 function createRoom({ season_number, moderator_name }) {
   //don't pass season id but rather pull from seasons table based on season number???
   return new Promise((resolve, reject) => {
@@ -43,6 +44,59 @@ function createRoom({ season_number, moderator_name }) {
           });
         },
       );
+    });
+  });
+}*/
+
+function createRoom({ season_number, moderator_name }) {
+  return new Promise((resolve, reject) => {
+    const roomCode = generateRoomCode();
+
+    const insertRoomSql =
+      "INSERT INTO rooms (room_code, season_id) VALUES (?, ?)";
+
+    db.query(insertRoomSql, [roomCode, season_number], (err, roomResult) => {
+      if (err) return reject(err);
+
+      const roomId = roomResult.insertId;
+
+      // ✅ 1. CREATE REVEAL ROW HERE
+      const insertRevealSql =
+        "INSERT INTO reveal (room_id, reveal_index) VALUES (?, 0)";
+
+      db.query(insertRevealSql, [roomId], (err) => {
+        if (err) return reject(err);
+
+        // ✅ 2. THEN create moderator player
+        const insertPlayerSql =
+          "INSERT INTO players (room_id, display_name) VALUES (?, ?)";
+
+        db.query(
+          insertPlayerSql,
+          [roomId, moderator_name],
+          (err, playerResult) => {
+            if (err) return reject(err);
+
+            const playerId = playerResult.insertId;
+
+            const updateRoomSql =
+              "UPDATE rooms SET moderator_player = ? WHERE id = ?";
+
+            db.query(updateRoomSql, [playerId, roomId], (err) => {
+              if (err) return reject(err);
+
+              resolve({
+                roomId,
+                roomCode,
+                moderator_player: {
+                  id: playerId,
+                  display_name: moderator_name,
+                },
+              });
+            });
+          },
+        );
+      });
     });
   });
 }

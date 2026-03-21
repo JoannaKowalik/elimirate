@@ -36,3 +36,15 @@ export const getPlayerIdByNameAndRoom = (display_name, roomCode) => {
     },
   });
 };
+
+// export const revealNext = (roomCode) => {
+//   return axios.post(`http://localhost:4000/api/rooms/${roomCode}/reveal`);
+// };
+
+export const revealNext = (roomCode) => {
+  return axios.post(
+    `http://localhost:4000/api/rooms/${roomCode}/reveal`,
+    {}, // empty JSON object
+    { headers: { "Content-Type": "application/json" } },
+  );
+};
