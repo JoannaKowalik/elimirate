@@ -1,10 +1,15 @@
 import React from "react";
+import Button from "react-bootstrap/esm/Button";
 
 function Home() {
   return (
-    <div>
-      <h1>Home</h1>
-      {/* Add form or UI elements to Home */}
+    <div className="d-flex flex-column my-auto justify-content-center vh-100">
+      <h1>Welcome to ElimiRATE!</h1>
+      <div className="d-flex flex-row gap-3 mt-3">
+        <Button href="/create">Start a new Game</Button>
+
+        <Button href="/login">Go to Room</Button>
+      </div>
     </div>
   );
 }

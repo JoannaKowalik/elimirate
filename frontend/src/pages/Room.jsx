@@ -8,6 +8,12 @@ import {
   revealNext,
 } from "../services/roomApi";
 
+import Table from "react-bootstrap/Table";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+import Container from "react-bootstrap/esm/Container";
+import Button from "react-bootstrap/esm/Button";
+
 function Room() {
   const { roomCode, playerId } = useParams();
   const [room, setRoom] = useState(null);
@@ -99,68 +105,96 @@ function Room() {
   }
 
   return (
-    <div>
-      <h1>Room</h1>
-      <div>Room Code: {room.room_code}</div>
-      <div>Hello {playerName}</div>
-      <ol>
-        {predictions.map(
-          (
-            contestant, //map alphabetically
-          ) => (
-            <li key={contestant.id}>
-              {contestant.name}
-              {contestant.predicted_position}
-            </li>
-          ),
-        )}
-      </ol>
-      <h2>Scores</h2>
+    <>
+      <h1>Room {room.room_code}</h1>
+      <h3>Hello {playerName}!</h3>
       {room.moderator_player === Number(playerId) && (
-        <button onClick={handleRevealNext}>Reveal Next Contestant</button>
+        <h3>
+          Share this link with other players:{" "}
+          <a href={`http://localhost:3000/room/${roomCode}/predictions`}>
+            http://localhost:3000/room/
+            {roomCode}/predictions
+          </a>
+        </h3>
       )}
-      <table>
-        <thead>
-          <tr>
-            <th>Player</th>
-            <th>Contestant</th>
-            <th>Episode</th>
-            <th>Actual Position</th>
-            <th>Predicted Position</th>
-            <th>Penalty Points</th>
-          </tr>
-        </thead>
-        <tbody>
-          {scores.map((score, index) => (
-            <tr key={index}>
-              <td>{score.display_name}</td>
-              <td>{score.name}</td>
-              <td>{score.episode_number}</td>
-              <td>{score.actual_position}</td>
-              <td>{score.predicted_position}</td>
-              <td>{score.penalty_points}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-      <h2>Total Scores</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>Player</th>
-            <th>Total Score</th>
-          </tr>
-        </thead>
-        <tbody>
-          {totalScores.map((score, index) => (
-            <tr key={index}>
-              <td>{score.display_name}</td>
-              <td>{score.total_score}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+
+      <Container>
+        <Row>
+          <Col>
+            <h3>Below are your predictions:</h3>
+            <Table striped bordered hover size="sm">
+              <thead>
+                <tr>
+                  <th>Contestant</th>
+                  <th>Predicted Position</th>
+                </tr>
+              </thead>
+              <tbody>
+                {predictions.map(
+                  (
+                    contestant, //map alphabetically
+                  ) => (
+                    <tr key={contestant.id}>
+                      <td>{contestant.name}</td>
+                      <td>{contestant.predicted_position}</td>
+                    </tr>
+                  ),
+                )}
+              </tbody>
+            </Table>
+          </Col>
+
+          <Col>
+            {" "}
+            <h2>Scores:</h2>
+            {room.moderator_player === Number(playerId) && (
+              <Button onClick={handleRevealNext}>Reveal Next Contestant</Button>
+            )}
+            <Table>
+              <thead>
+                <tr>
+                  <th>Player</th>
+                  <th>Contestant</th>
+                  <th>Episode</th>
+                  <th>Actual Position</th>
+                  <th>Predicted Position</th>
+                  <th>Penalty Points</th>
+                </tr>
+              </thead>
+              <tbody>
+                {scores.map((score, index) => (
+                  <tr key={index}>
+                    <td>{score.display_name}</td>
+                    <td>{score.name}</td>
+                    <td>{score.episode_number}</td>
+                    <td>{score.actual_position}</td>
+                    <td>{score.predicted_position}</td>
+                    <td>{score.penalty_points}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </Table>
+            <h2>Total Scores:</h2>
+            <Table>
+              <thead>
+                <tr>
+                  <th>Player</th>
+                  <th>Total Score</th>
+                </tr>
+              </thead>
+              <tbody>
+                {totalScores.map((score, index) => (
+                  <tr key={index}>
+                    <td>{score.display_name}</td>
+                    <td>{score.total_score}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </Table>
+          </Col>
+        </Row>
+      </Container>
+    </>
   );
 }
 

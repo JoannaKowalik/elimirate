@@ -6,6 +6,12 @@ import {
   submitPredictions,
 } from "../services/roomApi";
 
+//import { Sortable } from "../components/Sortable";
+//import { Sortable } from "@dnd-kit/dom/sortable";
+import { SortableItem } from "../components/SortableItem";
+import UseSortable from "../components/UseSortable";
+import Button from "react-bootstrap/Button";
+
 function Predictions() {
   const { roomCode } = useParams();
   const location = useLocation();
@@ -124,29 +130,28 @@ function Predictions() {
         /> */}
 
         <label htmlFor="predicted_position">Your predictions:</label>
-        <ol>
-          {contestants.map(
-            (
-              contestant, //map alphabetically
-            ) => (
-              <li key={contestant.id}>
-                {contestant.name}
-                {""}
+        <div>
+          <UseSortable
+            items={contestants}
+            onDrag={(newOrder) => {
+              const predictions = newOrder.map((cont, posit) => ({
+                contestant_id: cont.id,
+                predicted_position: posit + 1,
+              }));
 
-                <input
-                  type="number"
-                  min="1"
-                  max={contestants.length}
-                  required
-                  onChange={(e) =>
-                    handleInputChange(contestant.id, parseInt(e.target.value))
-                  }
-                />
-              </li>
-            ),
-          )}
-        </ol>
-        <button type="submit">Submit!</button>
+              setValues((currentState) => ({
+                ...currentState, //add predictions to current state (display name)
+                predictions,
+              }));
+            }}
+          >
+            {contestants.name}
+          </UseSortable>
+        </div>
+
+        <Button type="submit" m-t="3">
+          Submit!
+        </Button>
       </form>
     </div>
   );

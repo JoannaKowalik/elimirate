@@ -2,6 +2,10 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
+import Button from "react-bootstrap/Button";
+import Form from "react-bootstrap/Form";
+import FormGroup from "react-bootstrap/esm/FormGroup";
+
 function Create() {
   const [values, setValues] = useState({
     season_number: "",
@@ -33,56 +37,70 @@ function Create() {
   }
 
   return (
-    <div>
-      <h1>Create a Room</h1>
+    <div className="d-flex flex-column my-auto justify-content-center vh-100">
+      <h1>Create a new Room</h1>
 
-      <form onSubmit={handleSubmit}>
-        <label htmlFor="moderator_name">Your name:</label>
-        <input
-          type="text"
-          id="moderator_name"
-          name="moderator_name"
-          required
-          onChange={(e) =>
-            setValues({ ...values, moderator_name: e.target.value })
-          }
-        />
+      <Form onSubmit={handleSubmit}>
+        <FormGroup className="mb-3">
+          <Form.Label htmlFor="moderator_name">Your name:</Form.Label>
+          <Form.Control
+            type="text"
+            id="moderator_name"
+            name="moderator_name"
+            required
+            placeholder="Name"
+            onChange={(e) =>
+              setValues({ ...values, moderator_name: e.target.value })
+            }
+          />
 
-        <label htmlFor="numPlayers">Number of Players (2-6):</label>
-        <input
-          type="number"
-          id="numPlayers"
-          name="numPlayers"
-          min="2"
-          max="6"
-          required
-          onChange={
-            (e) =>
-              setValues({ ...values, numPlayers: parseInt(e.target.value) }) //pass to predictions, if more than selected number join, refuse access
-          }
-        />
+          <Form.Label htmlFor="numPlayers">Number of Players (2-6):</Form.Label>
+          <Form.Select
+            type="number"
+            id="numPlayers"
+            name="numPlayers"
+            min="2"
+            max="6"
+            required
+            onChange={
+              (e) =>
+                setValues({ ...values, numPlayers: parseInt(e.target.value) }) //pass to predictions, if more than selected number join, refuse access
+            }
+          >
+            <option value="" disabled>
+              Select a number of players
+            </option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+          </Form.Select>
 
-        <label htmlFor="season_number">Pick a season</label>
-        <select
-          value={values.season_number}
-          name="season_number"
-          id="season_number"
-          required
-          onChange={(e) =>
-            setValues({ ...values, season_number: Number(e.target.value) })
-          }
-          //fix values!!!
-        >
-          <option value="" disabled>
-            Select a season
-          </option>
-          <option value="1">Season 5</option>
-          <option value="2">Season 6</option>
-          <option value="3">Season 7</option>
-        </select>
+          <Form.Label htmlFor="season_number">Pick a season</Form.Label>
+          <Form.Select
+            value={values.season_number}
+            name="season_number"
+            id="season_number"
+            required
+            onChange={(e) =>
+              setValues({ ...values, season_number: Number(e.target.value) })
+            }
+            //fix values!!!
+          >
+            <option value="" disabled>
+              Select a season
+            </option>
+            <option value="1">Season 5</option>
+            <option value="2">Season 6</option>
+            <option value="3">Season 7</option>
+          </Form.Select>
 
-        <button type="submit">Create a Room</button>
-      </form>
+          <Button type="submit" className="mt-3">
+            Create a Room
+          </Button>
+        </FormGroup>
+      </Form>
     </div>
   );
 }

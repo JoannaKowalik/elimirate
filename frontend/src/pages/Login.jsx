@@ -2,6 +2,10 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getPlayerIdByNameAndRoom } from "../services/roomApi";
 
+import Button from "react-bootstrap/Button";
+import Form from "react-bootstrap/Form";
+import FormGroup from "react-bootstrap/esm/FormGroup";
+
 function Login() {
   const [values, setValues] = useState({
     roomCode: "",
@@ -31,26 +35,32 @@ function Login() {
   }
 
   return (
-    <div>
+    <div className="d-flex flex-column my-auto justify-content-center vh-100">
       <h1>Login</h1>
-      <form onSubmit={handleSubmit}>
-        <label htmlFor="room_code">Room Code:</label>
-        <input
-          type="text"
-          value={values.roomCode}
-          required
-          onChange={(e) => setValues({ ...values, roomCode: e.target.value })}
-        />
-        <label htmlFor="player_name">Your name:</label>
-        <input
-          type="text"
-          value={values.player_name}
-          onChange={(e) =>
-            setValues({ ...values, player_name: e.target.value })
-          }
-        />
-        <button type="submit">Join Room</button>
-      </form>
+      <Form onSubmit={handleSubmit}>
+        <FormGroup className="mb-3">
+          <Form.Label htmlFor="room_code">Room Code:</Form.Label>
+          <Form.Control
+            type="text"
+            value={values.roomCode}
+            required
+            placeholder="Room code"
+            onChange={(e) => setValues({ ...values, roomCode: e.target.value })}
+          />
+          <Form.Label htmlFor="player_name">Your name:</Form.Label>
+          <Form.Control
+            type="text"
+            value={values.player_name}
+            placeholder="Name"
+            onChange={(e) =>
+              setValues({ ...values, player_name: e.target.value })
+            }
+          />
+          <Button type="submit" className="mt-3">
+            Join Room
+          </Button>
+        </FormGroup>
+      </Form>
     </div>
   );
 }
