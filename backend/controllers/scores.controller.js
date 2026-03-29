@@ -9,7 +9,7 @@ async function getScores(req, res) {
     console.log("Fetching scores for room code:", roomCode);
     res.json({
       message: "Scores fetched successfully",
-      scores: scores.results || [],
+      scores: scores.scores || [],
       totalScores: scores.totalResults || [],
     });
   } catch (error) {

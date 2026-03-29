@@ -31,7 +31,7 @@ function Room() {
       console.log("API response for scores:", response.data);
       setScores(response.data.scores);
       setTotalScores(response.data.totalScores);
-      return response.data; // ✅ Return data for logging
+      return response.data;
     } catch (error) {
       console.error("Error fetching scores:", error);
       return null;
@@ -43,12 +43,31 @@ function Room() {
       const response = await getPlayerPredictions(roomCode, playerId);
       setPredictions(response.data.predictions);
       setPlayerName(response.data.display_name);
-      return response.data; // ✅ Return data for logging
+      return response.data;
     } catch (error) {
       console.error("Error fetching predictions:", error);
       return null;
     }
   };
+
+  const totalScoresByPlayer = scores.reduce((acc, score) => {
+    const name = score.display_name;
+
+    if (!acc[name]) {
+      acc[name] = 0;
+    }
+
+    acc[name] += score.penalty_points;
+
+    return acc;
+  }, {});
+
+  const totalsArray = Object.entries(totalScoresByPlayer).map(
+    ([display_name, total_penalty]) => ({
+      display_name,
+      total_penalty,
+    }),
+  );
 
   useEffect(() => {
     const fetchRoom = async () => {
@@ -63,6 +82,31 @@ function Room() {
       } catch (error) {
         console.error("Error fetching room:", error);
         setError("Error fetching room");
+      }
+    };
+
+    const fetchScores = async () => {
+      try {
+        const response = await getScores(roomCode);
+        console.log("API response for scores:", response.data);
+        setScores(response.data.scores);
+        setTotalScores(response.data.totalScores);
+        return response.data;
+      } catch (error) {
+        console.error("Error fetching scores:", error);
+        return null;
+      }
+    };
+
+    const fetchPredictions = async () => {
+      try {
+        const response = await getPlayerPredictions(roomCode, playerId);
+        setPredictions(response.data.predictions);
+        setPlayerName(response.data.display_name);
+        return response.data;
+      } catch (error) {
+        console.error("Error fetching predictions:", error);
+        return null;
       }
     };
 
@@ -92,13 +136,13 @@ function Room() {
     try {
       // Step 1: increment reveal_index
       await revealNext(roomCode);
-
-      // Step 2: fetch latest scores and predictions
-      const scoresResponse = await fetchScores();
-      console.log("Updated Scores:", scoresResponse);
-
+      const res = await getScores(roomCode);
       const predictionsResponse = await fetchPredictions();
       console.log("Updated Predictions:", predictionsResponse);
+      const scoresResponse = await fetchScores();
+      console.log("Updated Scores:", scoresResponse);
+      setScores(res.data.scores);
+      setTotalScores(res.data.totalScores);
     } catch (error) {
       console.error("Reveal failed:", error.response?.data || error.message);
     }
@@ -183,10 +227,10 @@ function Room() {
                 </tr>
               </thead>
               <tbody>
-                {totalScores.map((score, index) => (
+                {totalsArray.map((player, index) => (
                   <tr key={index}>
-                    <td>{score.display_name}</td>
-                    <td>{score.total_score}</td>
+                    <td>{player.display_name}</td>
+                    <td>{player.total_penalty}</td>
                   </tr>
                 ))}
               </tbody>
