@@ -1,6 +1,8 @@
 import React from "react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import Image from "react-bootstrap/Image";
+import photo from "../images/CardQueen.jpg";
 
 export function SortableItem(props) {
   const { attributes, listeners, setNodeRef, transform, transition } =
@@ -15,7 +17,8 @@ export function SortableItem(props) {
 
   return (
     <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
-      {props.name}
+      <Image src={photo} rounded height={100} width={100} thumbnail />
+      {props.name}{" "}
     </div>
   );
 }

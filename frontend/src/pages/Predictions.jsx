@@ -77,6 +77,7 @@ function Predictions() {
     const fetchContestants = async () => {
       try {
         const response = await getContestantsByRoomCode(roomCode);
+        response.data.sort((a, b) => a.name.localeCompare(b.name)); //sort cont alphabetically
         setContestants(response.data);
       } catch (error) {
         console.error("Error fetching contestants:", error);
@@ -119,24 +120,18 @@ function Predictions() {
 
       <form onSubmit={handleSubmit}>
         {renderNameInput()}
-        {/* <label htmlFor="display_name">Your name:</label>
-        <input
-          type="text"
-          value={values.display_name}
-          required
-          onChange={(e) =>
-            setValues({ ...values, display_name: e.target.value })
-          }
-        /> */}
 
-        <label htmlFor="predicted_position">Your predictions:</label>
+        <label htmlFor="predicted_position">
+          Drag the contestant's cards around to rank them from best (1.
+          position) to worst (last position):
+        </label>
         <div>
           <UseSortable
             items={contestants}
             onDrag={(newOrder) => {
-              const predictions = newOrder.map((cont, posit) => ({
+              const predictions = newOrder.map((cont, index) => ({
                 contestant_id: cont.id,
-                predicted_position: posit + 1,
+                predicted_position: index + 1,
               }));
 
               setValues((currentState) => ({

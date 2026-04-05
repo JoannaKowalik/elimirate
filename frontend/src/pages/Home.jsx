@@ -6,7 +6,7 @@ function Home() {
     <div className="d-flex flex-column my-auto justify-content-center vh-100">
       <h1>Welcome to ElimiRATE!</h1>
       <div className="d-flex flex-row gap-3 mt-3">
-        <Button href="/create">Start a new Game</Button>
+        <Button href="/create">Create a Room</Button>
 
         <Button href="/login">Go to Room</Button>
       </div>

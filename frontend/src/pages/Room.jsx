@@ -14,6 +14,8 @@ import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/esm/Container";
 import Button from "react-bootstrap/esm/Button";
 
+import CopyLink from "../components/CopyLink";
+
 function Room() {
   const { roomCode, playerId } = useParams();
   const [room, setRoom] = useState(null);
@@ -155,10 +157,13 @@ function Room() {
       {room.moderator_player === Number(playerId) && (
         <h3>
           Share this link with other players:{" "}
-          <a href={`http://localhost:3000/room/${roomCode}/predictions`}>
+          {/* <a href={`http://localhost:3000/room/${roomCode}/predictions`}>
             http://localhost:3000/room/
             {roomCode}/predictions
-          </a>
+          </a> */}
+          <CopyLink
+            link={`http://localhost:3000/room/${roomCode}/predictions`}
+          />
         </h3>
       )}
 

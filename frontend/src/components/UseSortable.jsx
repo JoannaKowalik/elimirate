@@ -16,6 +16,8 @@ import {
 } from "@dnd-kit/sortable";
 
 import { SortableItem } from "./SortableItem";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
 
 function UseSortable(props) {
   const [items, setItems] = useState(props.items);
@@ -36,8 +38,13 @@ function UseSortable(props) {
         items={items.map((item) => item.id)}
         strategy={verticalListSortingStrategy}
       >
-        {items.map((item) => (
-          <SortableItem key={item.id} id={item.id} name={item.name} />
+        {items.map((item, index) => (
+          <Row key={item.id}>
+            <Col>
+              <h3>{index + 1}</h3>
+              <SortableItem key={item.id} id={item.id} name={item.name} />
+            </Col>
+          </Row>
         ))}
       </SortableContext>
     </DndContext>

@@ -34,10 +34,10 @@ function getScores(roomCode) {
       JOIN eliminations ON eliminations.contestant_id = contestants.contestant_id 
       JOIN episodes ON eliminations.episode_id = episodes.id 
       JOIN rooms ON players.room_id = rooms.id 
-      JOIN reveal ON reveal.room_id = rooms.id   -- ✅ ADD THIS
+      JOIN reveal ON reveal.room_id = rooms.id  
       JOIN contestant ON predictions.contestant_id = contestant.id 
       WHERE rooms.room_code = ? 
-        AND episodes.episode_number <= reveal.reveal_index  -- ✅ ADD THIS
+        AND episodes.episode_number <= reveal.reveal_index  
       ORDER BY episodes.episode_number
     `;
 
