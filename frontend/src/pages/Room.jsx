@@ -27,27 +27,47 @@ function Room() {
   const [totalScores, setTotalScores] = useState([]);
   const [episodeId, setEpisodeId] = useState(1);
 
+ console.log("Room >Player ID", playerId);
+ 
+    const fetchRoom = async () => {
+      console.log("roomCode from URL:", roomCode);
+      try {
+        const url = `http://localhost:4000/api/rooms/${roomCode}`;
+        console.log("Calling API. (room):", url);
+
+        const response = await getRoomByCode(roomCode);
+        console.log("Room > fetchRoom > API response (room):", response.data);
+        setRoom(response.data);
+      } catch (error) {
+        console.error("Room > fetchRoom > Error fetching room:", error);
+        setError("Error fetching room");
+      }
+    };
+ 
   const fetchScores = async () => {
     try {
       const response = await getScores(roomCode);
-      console.log("API response for scores:", response.data);
+      console.log("Room > fetchScores1 > API response for scores:", response.data);
       setScores(response.data.scores);
       setTotalScores(response.data.totalScores);
       return response.data;
     } catch (error) {
-      console.error("Error fetching scores:", error);
+      console.error("Room > fetchScores > Error fetching scores:", error);
       return null;
     }
   };
 
   const fetchPredictions = async () => {
     try {
+      
       const response = await getPlayerPredictions(roomCode, playerId);
+     
+      console.log("Room > fetchPredictions > API response for predictions:", response.data);
       setPredictions(response.data.predictions);
       setPlayerName(response.data.display_name);
       return response.data;
     } catch (error) {
-      console.error("Error fetching predictions:", error);
+      console.error("Room > fetchPredictions > Error fetching predictions:", error);
       return null;
     }
   };
@@ -72,64 +92,14 @@ function Room() {
   );
 
   useEffect(() => {
-    const fetchRoom = async () => {
-      console.log("roomCode from URL:", roomCode);
-      try {
-        const url = `http://localhost:4000/api/rooms/${roomCode}`;
-        console.log("Calling API. (room):", url);
-
-        const response = await getRoomByCode(roomCode);
-        console.log("API response (room):", response.data);
-        setRoom(response.data);
-      } catch (error) {
-        console.error("Error fetching room:", error);
-        setError("Error fetching room");
-      }
-    };
-
-    const fetchScores = async () => {
-      try {
-        const response = await getScores(roomCode);
-        console.log("API response for scores:", response.data);
-        setScores(response.data.scores);
-        setTotalScores(response.data.totalScores);
-        return response.data;
-      } catch (error) {
-        console.error("Error fetching scores:", error);
-        return null;
-      }
-    };
-
-    const fetchPredictions = async () => {
-      try {
-        const response = await getPlayerPredictions(roomCode, playerId);
-        setPredictions(response.data.predictions);
-        setPlayerName(response.data.display_name);
-        return response.data;
-      } catch (error) {
-        console.error("Error fetching predictions:", error);
-        return null;
-      }
-    };
-
-    /*
-    const fetchPlayers = async () => {
-      try {
-        const url = `http://localhost:4000/api/rooms/${roomCode}/players`;
-        console.log("Calling API for players:", url);
-
-        const response = await getPlayersByRoom(roomCode);
-        console.log("API response for players:", response.data);
-        setPlayers(response.data);
-      } catch (error) {
-        console.error("Error fetching players:", error);
-      }
-    };*/
+   
 
     fetchRoom();
-    fetchPredictions();
-    //fetchPlayers();
+    
     fetchScores();
+    if (playerId) {
+      fetchPredictions();
+    }
   }, [roomCode, playerId]);
   if (error) return <p>{error}</p>;
   if (!room) return <p>Loading...</p>;
@@ -194,7 +164,23 @@ function Room() {
           </Col>
 
           <Col>
-            {" "}
+            <h2>Total Scores:</h2>
+            <Table>
+              <thead>
+                <tr>
+                  <th>Player</th>
+                  <th>Total Score</th>
+                </tr>
+              </thead>
+              <tbody>
+                {totalsArray.map((player, index) => (
+                  <tr key={index}>
+                    <td>{player.display_name}</td>
+                    <td>{player.total_penalty}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </Table>{" "}
             <h2>Scores:</h2>
             {room.moderator_player === Number(playerId) && (
               <Button onClick={handleRevealNext}>Reveal Next Contestant</Button>
@@ -219,23 +205,6 @@ function Room() {
                     <td>{score.actual_position}</td>
                     <td>{score.predicted_position}</td>
                     <td>{score.penalty_points}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </Table>
-            <h2>Total Scores:</h2>
-            <Table>
-              <thead>
-                <tr>
-                  <th>Player</th>
-                  <th>Total Score</th>
-                </tr>
-              </thead>
-              <tbody>
-                {totalsArray.map((player, index) => (
-                  <tr key={index}>
-                    <td>{player.display_name}</td>
-                    <td>{player.total_penalty}</td>
                   </tr>
                 ))}
               </tbody>

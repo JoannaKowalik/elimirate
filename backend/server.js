@@ -18,7 +18,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use("/api/rooms/", roomsRoutes);
-app.use("/api/players", playersRoutes);
+app.use("/api/rooms", playersRoutes);
 app.use("/api/rooms", predictionsRoutes);
 app.use("/api", scoreRoutes);
 

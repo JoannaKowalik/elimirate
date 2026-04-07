@@ -6,4 +6,6 @@ router.post("/:roomCode/players", playersController.addPlayer);
 
 router.get("/:roomCode/players/id", playersController.getPlayerIdByNameAndRoom);
 
+router.get("/:roomCode/players/:playerId/predictions", playersController.getPlayerPredictions);
+
 module.exports = router;

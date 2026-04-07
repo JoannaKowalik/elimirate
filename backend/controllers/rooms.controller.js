@@ -4,7 +4,7 @@ async function createRoom(req, res) {
   try {
     console.log("Request body:", req.body);
     const room = await roomService.createRoom(req.body);
-
+    console.log("Room created:", room);
     res.json({
       message: "Room created successfully",
       ...room,
@@ -17,15 +17,13 @@ async function createRoom(req, res) {
 
 async function getRoomByCode(req, res) {
   try {
-    console.log("roomService:", roomService);
+    
     console.log("roomCode:", req.params.roomCode);
 
     const room = await roomService.getRoomByCode(req.params.roomCode);
 
-    if (!room) {
-      return res.status(404).json({ message: "Room not found" });
-    }
-
+   
+console.log("Fetched room:", room);
     res.json(room);
   } catch (err) {
     console.error("Error fetching room:", err);
@@ -54,7 +52,7 @@ async function getRoomSeason(req, res) {
 async function getContestantsByRoomCode(req, res) {
   try {
     const { roomCode } = req.params;
-    console.log("Fetching contestants for room code:", roomCode);
+    console.log("Fetching contestants for room:", roomCode);
     const contestants = await roomService.getContestantsByRoomCode(roomCode);
 
     if (!contestants) {

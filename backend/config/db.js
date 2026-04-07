@@ -1,4 +1,4 @@
-const mysql = require("mysql2");
+const mysql = require("mysql2/promise");
 
 // Create a connection pool to the MySQL database using environment variables for configuration
 const db = mysql.createPool({

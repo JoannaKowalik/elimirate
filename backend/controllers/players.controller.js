@@ -46,7 +46,20 @@ async function getPlayerIdByNameAndRoom(req, res) {
   }
 }
 
+async function getPlayerPredictions(req, res) {
+  try {
+    console.log("Params:", req.params);
+    const {playerId, roomCode} = req.params;//????
+    const playerPred = await playerService.getPlayerPredictions(playerId);
+    res.json({predictions: playerPred, display_name: playerPred[0].display_name});
+  } catch (err) {
+    console.error("Get player predictions error:", err);
+    res.status(500).json({ message: "Failed to get player predictions" });
+  }
+}
+
 module.exports = {
   addPlayer,
   getPlayerIdByNameAndRoom,
+  getPlayerPredictions,
 };

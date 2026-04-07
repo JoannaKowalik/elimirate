@@ -7,11 +7,11 @@ async function addPrediction(req, res) {
     const { display_name, predictions, moderator_name } = req.body;
     console.log("Received prediction data:", req.body);
 
-    if (!display_name || !predictions || predictions.length === 0) {
+    /*if (!display_name || !predictions || predictions.length === 0) {
       return res
         .status(400)
         .json({ message: "Missing display name or predictions" });
-    }
+    }*/
     //if passed moderator name, don't create player, just add predictions to existing moderator player id
 
     let player;

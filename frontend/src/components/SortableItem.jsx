@@ -3,6 +3,7 @@ import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import Image from "react-bootstrap/Image";
 import photo from "../images/CardQueen.jpg";
+import "../styles.css";
 
 export function SortableItem(props) {
   const { attributes, listeners, setNodeRef, transform, transition } =
