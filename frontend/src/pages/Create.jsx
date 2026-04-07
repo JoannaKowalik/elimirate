@@ -37,7 +37,7 @@ function Create() {
   }
 
   return (
-    <div className="d-flex flex-column my-auto justify-content-center vh-100">
+    <div className="d-flex flex-column my-auto justify-content-center vh-100 p-5 background2">
       <h1>Create a new Room</h1>
 
       <Form onSubmit={handleSubmit}>

@@ -13,7 +13,7 @@ function App() {
   return (
     <Router>
       <PageNavbar></PageNavbar>
-      <Container>
+      <Container >
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/create" element={<Create />} />

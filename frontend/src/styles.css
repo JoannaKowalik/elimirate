@@ -1,7 +1,19 @@
 
 
 .background1 {
-  background-image: url("/images/Trixie_2.jpeg");
+  background-image: url("../public/images/Trixie_1.jpeg");
+  background-size: cover;
+  background-position: center;
+}
+
+.background2 {
+  background-image: url("../public/images/Trixie_2.jpeg");
+  background-size: cover;
+  background-position: center;
+}
+
+.background3 {
+  background-image: url("../public/images/Trixie_3.jpeg");
   background-size: cover;
   background-position: center;
 }

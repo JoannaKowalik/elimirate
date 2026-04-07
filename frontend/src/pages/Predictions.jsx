@@ -115,7 +115,7 @@ function Predictions() {
   }
 
   return (
-    <div>
+    <div >
       <h1>Input Predictions</h1>
 
       <form onSubmit={handleSubmit}>
