@@ -35,7 +35,8 @@ function Login() {
   }
 
   return (
-    <div className="d-flex flex-column my-auto justify-content-center vh-100">
+    <div className="d-flex flex-column my-auto justify-content-center p-5 vh-100">
+      <div className="vh-100 background3"></div>
       <h1>Login</h1>
       <Form onSubmit={handleSubmit}>
         <FormGroup className="mb-3">
@@ -56,7 +57,7 @@ function Login() {
               setValues({ ...values, player_name: e.target.value })
             }
           />
-          <Button type="submit" className="mt-3">
+          <Button type="submit" className="mt-3" variant="warning">
             Join Room
           </Button>
         </FormGroup>

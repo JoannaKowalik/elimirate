@@ -11,7 +11,7 @@ async function createRoom(req, res) {
     });
   } catch (error) {
     console.error(error);
-    res.status(500).send("Error creating room");
+    res.status(500).send("We’re experiencing some issues, please try again later.");
   }
 }
 

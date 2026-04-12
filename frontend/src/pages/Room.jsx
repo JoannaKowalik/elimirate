@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import {
-  getRoomByCode,
-  //getPlayersByRoom,
+  //getRoomByCode,
   getPlayerPredictions,
   getScores,
   revealNext,
@@ -21,92 +20,71 @@ function Room() {
   const [room, setRoom] = useState(null);
   const [error, setError] = useState(null);
   const [playerName, setPlayerName] = useState(null);
-  //const [players, setPlayers] = useState([]);
   const [predictions, setPredictions] = useState([]);
   const [scores, setScores] = useState([]);
   const [totalScores, setTotalScores] = useState([]);
-  const [episodeId, setEpisodeId] = useState(1);
+  //const [episodeId, setEpisodeId] = useState(1);
 
- console.log("Room >Player ID", playerId);
- 
-    const fetchRoom = async () => {
-      console.log("roomCode from URL:", roomCode);
-      try {
-        const url = `http://localhost:4000/api/rooms/${roomCode}`;
-        console.log("Calling API. (room):", url);
+  console.log("Room >Player ID", playerId);
 
-        const response = await getRoomByCode(roomCode);
-        console.log("Room > fetchRoom > API response (room):", response.data);
-        setRoom(response.data);
-      } catch (error) {
-        console.error("Room > fetchRoom > Error fetching room:", error);
-        setError("Error fetching room");
+  async function fetchRoom() {
+    //https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
+    //console.log("roomCode from URL:", roomCode);
+    try {
+      const response = await fetch(
+        `http://localhost:4000/api/rooms/${roomCode}`,
+      ); //use getRoomByCode?
+      // console.log("Calling API. (room):", response);
+      if (!response.ok) {
+        throw new Error(`Response status: ${response.status}`);
       }
-    };
- 
-  const fetchScores = async () => {
+      const result = await response.json();
+      console.log("Room > fetchRoom > API response (room):", result);
+      setRoom(result);
+    } catch (error) {
+      console.error("Room > fetchRoom > Error fetching room:", error);
+      setError("Error fetching room"); //displays on page - check user requirements
+    }
+  }
+
+  async function fetchScores() {
     try {
       const response = await getScores(roomCode);
-      console.log("Room > fetchScores1 > API response for scores:", response.data);
+
+      console.log(
+        "Room > fetchScores1 > API response for scores:",
+        response.data,
+      );
       setScores(response.data.scores);
       setTotalScores(response.data.totalScores);
-      return response.data;
+      //return response.data;
     } catch (error) {
       console.error("Room > fetchScores > Error fetching scores:", error);
-      return null;
     }
-  };
+  }
 
-  const fetchPredictions = async () => {
+  async function fetchPredictions() {
     try {
-      
       const response = await getPlayerPredictions(roomCode, playerId);
-     
-      console.log("Room > fetchPredictions > API response for predictions:", response.data);
+
+      console.log(
+        "Room > fetchPredictions > API response for predictions:",
+        response.data,
+      );
       setPredictions(response.data.predictions);
       setPlayerName(response.data.display_name);
-      return response.data;
+      // console.log("Player name: " , playerName);
+      //return response.data;
     } catch (error) {
-      console.error("Room > fetchPredictions > Error fetching predictions:", error);
-      return null;
+      console.error(
+        "Room > fetchPredictions > Error fetching predictions:",
+        error,
+      );
     }
-  };
-
-  const totalScoresByPlayer = scores.reduce((acc, score) => {
-    const name = score.display_name;
-
-    if (!acc[name]) {
-      acc[name] = 0;
-    }
-
-    acc[name] += score.penalty_points;
-
-    return acc;
-  }, {});
-
-  const totalsArray = Object.entries(totalScoresByPlayer).map(
-    ([display_name, total_penalty]) => ({
-      display_name,
-      total_penalty,
-    }),
-  );
-
-  useEffect(() => {
-   
-
-    fetchRoom();
-    
-    fetchScores();
-    if (playerId) {
-      fetchPredictions();
-    }
-  }, [roomCode, playerId]);
-  if (error) return <p>{error}</p>;
-  if (!room) return <p>Loading...</p>;
+  }
 
   async function handleRevealNext() {
     try {
-      // Step 1: increment reveal_index
       await revealNext(roomCode);
       const res = await getScores(roomCode);
       const predictionsResponse = await fetchPredictions();
@@ -119,6 +97,63 @@ function Room() {
       console.error("Reveal failed:", error.response?.data || error.message);
     }
   }
+  /*
+  const totalScoresByPlayer = scores.reduce((totalSc, score) => {//calculate total scores in front-end; should be in back end. totalSC - accumulator object, score - current score object processed
+    const name = score.display_name;
+
+    if (!totalSc[name]) {//if tgeres no player, initialize with 0
+      totalSc[name] = 0;
+    }
+
+    totalSc[name] += score.penalty_points;
+
+    return totalSc;
+  }, {});
+*/
+  function totalScoresByPlayer(scores) {
+    //takes array of scores
+
+    const totalSc = {}; //new empty object
+    for (let i = 0; i < scores.length; i++) {
+      const score = scores[i];
+      const name = score.display_name;
+
+      if (!totalSc[name] || totalSc[name] === 0) {
+        //name is the key
+        //if tgeres no player, initialize with 0
+        totalSc[name] = 0;
+      }
+      totalSc[name] += score.penalty_points; //add points to total score for player [name] key
+    }
+    return totalSc; //object of player name: total score
+  }
+
+  // const totalsArray = Object.entries(totalScoresByPlayer).map(
+  //   ([display_name, total_penalty]) => ({
+  //     display_name,
+  //     total_penalty,
+  //   }),
+  // );
+
+  //convert totalSc object to arrray
+  //https://stackoverflow.com/questions/26795643/how-to-convert-object-containing-objects-into-array-of-objects
+  const totalScoresObj = totalScoresByPlayer(scores);
+  const totalsArray = Object.keys(totalScoresObj).map((key) => {
+    return {
+      display_name: key,
+      total_penalty: totalScoresObj[key],
+    };
+  });
+
+  useEffect(() => {
+    fetchRoom();
+    fetchScores();
+    if (playerId) {
+      fetchPredictions();
+    }
+  }, [roomCode, playerId]);
+  if (error) return <p>{error}</p>;
+  if (!room) return <p>Loading...</p>;
 
   return (
     <>
@@ -183,7 +218,9 @@ function Room() {
             </Table>{" "}
             <h2>Scores:</h2>
             {room.moderator_player === Number(playerId) && (
-              <Button onClick={handleRevealNext}>Reveal Next Contestant</Button>
+              <Button onClick={handleRevealNext} variant="warning">
+                Reveal Next Contestant
+              </Button>
             )}
             <Table>
               <thead>

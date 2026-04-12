@@ -115,16 +115,19 @@ function Predictions() {
   }
 
   return (
-    <div >
+    <div>
       <h1>Input Predictions</h1>
 
       <form onSubmit={handleSubmit}>
         {renderNameInput()}
 
-        <label htmlFor="predicted_position">
+        <p>
           Drag the contestant's cards around to rank them from best (1.
-          position) to worst (last position):
-        </label>
+          position) to worst (last position).
+        </p>
+        <p>
+          Be careful - you'll score penalty points for incorrect predictions!
+        </p>
         <div>
           <UseSortable
             items={contestants}
@@ -144,7 +147,7 @@ function Predictions() {
           </UseSortable>
         </div>
 
-        <Button type="submit" m-t="3">
+        <Button type="submit" m-t="3" variant="warning">
           Submit!
         </Button>
       </form>

@@ -47,7 +47,12 @@ async function addPrediction(req, res) {
     });
   } catch (error) {
     console.error("Error adding prediction:", error);
-    res.status(500).json({ message: "Error adding prediction", error });
+    res
+      .status(500)
+      .json({
+        message: "Your answers couldn’t be locked in, please try again later",
+        error,
+      });
   }
 }
 

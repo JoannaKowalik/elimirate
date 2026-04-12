@@ -9,7 +9,7 @@
 .background2 {
   background-image: url("../public/images/Trixie_2.jpeg");
   background-size: cover;
-  background-position: center;
+  background-position: 0 30%;
 }
 
 .background3 {

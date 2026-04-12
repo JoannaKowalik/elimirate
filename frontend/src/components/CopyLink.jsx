@@ -21,7 +21,9 @@ function CopyLink({ link }) {
         id="myInput"
         readOnly
       ></input>
-      <Button onClick={handleCopy}>Copy text</Button>
+      <Button onClick={handleCopy} variant="warning">
+        Copy text
+      </Button>
     </>
   );
 }

@@ -37,7 +37,8 @@ function Create() {
   }
 
   return (
-    <div className="d-flex flex-column my-auto justify-content-center vh-100 p-5 background2">
+    <div className="d-flex flex-column my-auto justify-content-center vh-100 p-5">
+      <div className="vh-100 background2"></div>
       <h1>Create a new Room</h1>
 
       <Form onSubmit={handleSubmit}>
@@ -96,7 +97,7 @@ function Create() {
             <option value="3">Season 7</option>
           </Form.Select>
 
-          <Button type="submit" className="mt-3">
+          <Button type="submit" className="mt-3 " variant="warning">
             Create a Room
           </Button>
         </FormGroup>

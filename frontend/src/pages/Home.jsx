@@ -5,11 +5,16 @@ import Image from "react-bootstrap/esm/Image";
 function Home() {
   return (
     <div className="d-flex flex-column my-auto justify-content-center vh-100 background1 p-5">
-      <h1>Welcome to ElimiRATE!</h1>
+      <h1>Welcome to ElimiRATE</h1>
+      <h6>Start a new game, invite your friends, and rate the queens! </h6>
       <div className="d-flex flex-row gap-3 mt-3">
-        <Button href="/create">Create a Room</Button>
+        <Button href="/create" variant="warning">
+          Create a Room
+        </Button>
 
-        <Button href="/login">Go to Room</Button>
+        <Button href="/login" variant="warning">
+          Go to Room
+        </Button>
       </div>
     </div>
   );
