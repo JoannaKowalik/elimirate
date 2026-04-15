@@ -14,7 +14,7 @@ function Login() {
   const navigate = useNavigate();
 
   async function handleSubmit(e) {
-    e.preventDefault();
+    e.preventDefault(); //prevent refreshig
     try {
       const res = await getPlayerIdByNameAndRoom(
         values.player_name,
@@ -24,10 +24,7 @@ function Login() {
       const player_id = res.data.player_id;
       navigate("/room/" + values.roomCode + "/players/" + player_id, {
         //player_id!!!
-        state: {
-          roomCode: values.roomCode,
-          player_name: values.player_name,
-        },
+        state: { roomCode: values.roomCode, player_name: values.player_name },
       });
     } catch (err) {
       console.error(err);

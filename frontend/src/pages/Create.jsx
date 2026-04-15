@@ -29,7 +29,7 @@ function Create() {
             moderator_name: values.moderator_name,
           },
         });
-        console.log(res.data);
+        //console.log(res.data);
       })
       .catch((err) => {
         console.error(err);

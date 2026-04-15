@@ -53,33 +53,9 @@ async function getScores(roomCode) {
         });
       };
 
-//get reveal index. no???
-/*
-function getRevealIndex(roomCode, episodeId) {
-  return new Promise((resolve, reject) => {
-    const sql =
-      "SELECT reveal_index FROM reveal JOIN rooms ON reveal.room_id = rooms.id WHERE rooms.room_code = ? AND reveal.episode_id";
-
-    db.query(sql, [roomCode, episodeId], (err, results) => {
-      if (err) return reject(err);
-      resolve(results[0]?.reveal_index ?? 0);
-    });
-  });
-}
-//no???
-function updateReveal(roomCode, episodeId) {
-  return new Promise((resolve, reject) => {
-    const sql =
-      "UPDATE reveal JOIN rooms ON reveal.room_id = rooms.id SET reveal_index = reveal_index + 1 WHERE rooms.room_code = ? AND reveal.episode_id = ?";
-    db.query(sql, [roomCode, episodeId], (err, results) => {
-      if (err) return reject(err);
-      resolve({ results });
-    });
-  });
-}*/
 
 async function revealNext(roomCode) {
-  const result = await updateRevealSafe(roomCode);
+  const result = await updateReveal(roomCode);
 
   if (result.affectedRows === 0) {
     throw new Error("Nothing to reveal or already complete");
@@ -103,7 +79,7 @@ async function getRevealIndex(roomCode) {
       return(results[0].reveal_index);}
     };
 
-async function updateRevealSafe(roomCode) {
+async function updateReveal(roomCode) {
    
     const sql = `
       UPDATE reveal

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
+import ContestantCard from "../components/ContestantCard";
 
 import {
   getContestantsByRoomCode,
@@ -8,14 +9,14 @@ import {
 
 //import { Sortable } from "../components/Sortable";
 //import { Sortable } from "@dnd-kit/dom/sortable";
-import { SortableItem } from "../components/SortableItem";
+//import { SortableItem } from "../components/SortableItem";
 import UseSortable from "../components/UseSortable";
 import Button from "react-bootstrap/Button";
 
 function Predictions() {
   const { roomCode } = useParams();
-  const location = useLocation();
-  const moderator_name = location.state?.moderator_name || null;
+  const location = useLocation(); //gets props
+  const moderator_name = location.state?.moderator_name || null; //get name from Create, if not there- null
   const navigate = useNavigate();
   const [contestants, setContestants] = useState([]);
   const [error, setError] = useState(null);
@@ -23,26 +24,6 @@ function Predictions() {
     display_name: "",
     predictions: [], //array of contestant ids from best (1) to worst (number od contestants)
   });
-
-  //use if drag&drop, else update array on input change
-  const handleInputChange = (contestantId, position) => {
-    setValues((prev) => {
-      const updated = [...prev.predictions];
-
-      const existing = updated.find((p) => p.contestant_id === contestantId);
-
-      if (existing) {
-        existing.predicted_position = position;
-      } else {
-        updated.push({
-          contestant_id: contestantId,
-          predicted_position: position,
-        });
-      }
-
-      return { ...prev, predictions: updated };
-    });
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -60,7 +41,6 @@ function Predictions() {
     };
 
     try {
-      //console.log("Submitting:", { ...values, roomCode });
       const res = await submitPredictions(roomCode, passedData);
       console.log("Response from submitPredictions:", res.data);
       navigate("/room/" + roomCode + "/players/" + res.data.player_id, {
@@ -69,7 +49,7 @@ function Predictions() {
       console.log(res.data);
     } catch (err) {
       console.error("Error submitting predictions:", err);
-      setError("Failed to submit predictions");
+      setError("Failed to submit predictions"); //renders on page
     }
   };
 
@@ -81,7 +61,7 @@ function Predictions() {
         setContestants(response.data);
       } catch (error) {
         console.error("Error fetching contestants:", error);
-        setError("Error fetching contestants");
+        setError("Error fetching contestants"); //displays on page
       }
     };
     fetchContestants();
@@ -90,6 +70,7 @@ function Predictions() {
   if (error) return <p>{error}</p>;
   if (contestants.length === 0) return <p>Loading...</p>;
 
+  //renderveitherb mod name or user name input if no mod name
   function renderNameInput() {
     if (moderator_name) {
       return (
@@ -144,6 +125,7 @@ function Predictions() {
             }}
           >
             {contestants.name}
+            <ContestantCard />
           </UseSortable>
         </div>
 

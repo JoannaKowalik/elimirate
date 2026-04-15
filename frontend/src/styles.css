@@ -17,3 +17,7 @@
   background-size: cover;
   background-position: center;
 }
+
+.sortable-item {
+ touch-action: none;
+}

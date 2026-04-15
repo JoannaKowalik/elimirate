@@ -1,3 +1,4 @@
+//https://dndkit.com/react/hooks/use-sortable/
 import React, { useState } from "react";
 import {
   DndContext,
@@ -73,3 +74,30 @@ function UseSortable(props) {
 }
 
 export default UseSortable;
+/*import React, { useState } from "react";
+import { SortableItem } from "./SortableItem";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+
+//import { useSortable } from "@dnd-kit/react/sortable";
+
+function UseSortable({items: initialItems, id, index, onDrag}) {
+  //const { ref } = useSortable({ id, index });
+  const [items, setItems] = useState(initialItems);
+
+  return (
+    <div >
+      {items.map((item, index) => (
+        <Row key={item.id}>
+          <Col>
+            <h3>{index + 1}</h3>
+            <SortableItem key={item.id} id={item.id} name={item.name} />
+          </Col>
+        </Row>
+      ))}
+    </div>
+  );
+}
+
+
+export default UseSortable;*/
