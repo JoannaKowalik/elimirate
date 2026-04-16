@@ -125,7 +125,6 @@ function Predictions() {
             }}
           >
             {contestants.name}
-            <ContestantCard />
           </UseSortable>
         </div>
 

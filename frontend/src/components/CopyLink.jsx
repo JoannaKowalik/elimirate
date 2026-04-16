@@ -1,3 +1,5 @@
+//https://www.w3schools.com/howto/howto_js_copy_clipboard.asp
+
 import React from "react";
 import Button from "react-bootstrap/esm/Button";
 

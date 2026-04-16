@@ -1,10 +1,8 @@
 const db = require("../config/db");
 
-
-
 async function getScores(roomCode) {
- 
-    const sql = `
+  //gets all scores up yo the reveal index/episode number
+  const sql = `
       SELECT 
         players.display_name, 
         contestant.name, 
@@ -25,9 +23,9 @@ async function getScores(roomCode) {
       ORDER BY episodes.episode_number
     `;
 
-    const[results]=await db.query(sql, [roomCode]);
+  const [results] = await db.query(sql, [roomCode]);
 
-      const total_scores = `
+  const total_scores = `
         SELECT 
           players.display_name, 
           SUM(ABS(eliminations.actual_position - predictions.predicted_position)) AS total_score 
@@ -44,21 +42,20 @@ async function getScores(roomCode) {
         ORDER BY total_score
       `;
 
-      const[totalResults]=await db.query(total_scores, [roomCode]);
-      
+  const [totalResults] = await db.query(total_scores, [roomCode]);
 
-        return({
-          scores: results,
-          totalScores: totalResults,
-        });
-      };
-
+  return {
+    scores: results,
+    totalScores: totalResults,
+  };
+}
 
 async function revealNext(roomCode) {
   const result = await updateReveal(roomCode);
 
   if (result.affectedRows === 0) {
-    throw new Error("Nothing to reveal or already complete");
+    //ffunction from mySQL
+    throw new Error("Nothing to reveal");
   }
 
   // Return the current reveal_index after increment
@@ -67,21 +64,23 @@ async function revealNext(roomCode) {
 }
 
 async function getRevealIndex(roomCode) {
-    const sql = `
+  const sql = `
       SELECT reveal_index
       FROM reveal
       JOIN rooms ON reveal.room_id = rooms.id
       WHERE rooms.room_code = ?
     `;
-    const[results]=await db.query(sql, [roomCode]);
-    if (!results) {return 0;}
-    else{
-      return(results[0].reveal_index);}
-    };
+  const [results] = await db.query(sql, [roomCode]);
+  if (!results) {
+    return 0;
+  } else {
+    return results[0].reveal_index;
+  }
+}
 
 async function updateReveal(roomCode) {
-   
-    const sql = `
+  //increase reveal index on click Reveal Next.Episode numbers are incorrect! Fix db
+  const sql = `
       UPDATE reveal
       SET reveal_index = reveal_index + 1
       WHERE room_id = (
@@ -96,9 +95,9 @@ async function updateReveal(roomCode) {
       )
     `;
 
-    const[results]=await db.query(sql, [roomCode, roomCode]);
-    return results;
-  };
+  const [results] = await db.query(sql, [roomCode, roomCode]);
+  return results;
+}
 
 module.exports = {
   getScores,

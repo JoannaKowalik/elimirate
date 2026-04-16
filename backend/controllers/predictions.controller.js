@@ -7,11 +7,6 @@ async function addPrediction(req, res) {
     const { display_name, predictions, moderator_name } = req.body;
     console.log("Received prediction data:", req.body);
 
-    /*if (!display_name || !predictions || predictions.length === 0) {
-      return res
-        .status(400)
-        .json({ message: "Missing display name or predictions" });
-    }*/
     //if passed moderator name, don't create player, just add predictions to existing moderator player id
 
     let player;
@@ -47,12 +42,10 @@ async function addPrediction(req, res) {
     });
   } catch (error) {
     console.error("Error adding prediction:", error);
-    res
-      .status(500)
-      .json({
-        message: "Your answers couldn’t be locked in, please try again later",
-        error,
-      });
+    res.status(500).json({
+      message: "Your answers couldn’t be locked in, please try again later",
+      error,
+    });
   }
 }
 

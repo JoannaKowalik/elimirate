@@ -87,29 +87,14 @@ function Room() {
     try {
       await revealNext(roomCode);
       const res = await getScores(roomCode);
-      const predictionsResponse = await fetchPredictions();
-      console.log("Updated Predictions:", predictionsResponse);
-      const scoresResponse = await fetchScores();
-      console.log("Updated Scores:", scoresResponse);
+    //updates reveal index and thrn gets scores (all up to reveal index/episode number). then sets scores
       setScores(res.data.scores);
       setTotalScores(res.data.totalScores);
     } catch (error) {
       console.error("Reveal failed:", error.response?.data || error.message);
     }
   }
-  /*
-  const totalScoresByPlayer = scores.reduce((totalSc, score) => {//calculate total scores in front-end; should be in back end. totalSC - accumulator object, score - current score object processed
-    const name = score.display_name;
-
-    if (!totalSc[name]) {//if tgeres no player, initialize with 0
-      totalSc[name] = 0;
-    }
-
-    totalSc[name] += score.penalty_points;
-
-    return totalSc;
-  }, {});
-*/
+ 
   function totalScoresByPlayer(scores) {
     //takes array of scores
 
@@ -117,10 +102,10 @@ function Room() {
     for (let i = 0; i < scores.length; i++) {
       const score = scores[i];
       const name = score.display_name;
-
+//use .entries instwad??
       if (!totalSc[name] || totalSc[name] === 0) {
         //name is the key
-        //if tgeres no player, initialize with 0
+        //if tgeres no player by that name, add new player with name and score 0
         totalSc[name] = 0;
       }
       totalSc[name] += score.penalty_points; //add points to total score for player [name] key
@@ -128,12 +113,7 @@ function Room() {
     return totalSc; //object of player name: total score
   }
 
-  // const totalsArray = Object.entries(totalScoresByPlayer).map(
-  //   ([display_name, total_penalty]) => ({
-  //     display_name,
-  //     total_penalty,
-  //   }),
-  // );
+ 
 
   //convert totalSc object to arrray
   //https://stackoverflow.com/questions/26795643/how-to-convert-object-containing-objects-into-array-of-objects

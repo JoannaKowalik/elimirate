@@ -5,12 +5,11 @@ async function getScores(req, res) {
     console.log("Request body:", req.body);
 
     const roomCode = req.params.roomCode;
-    const scores = await scoreService.getScores(roomCode);
-    console.log("Fetching scores for room code:", roomCode);
+      const scores =await scoreService.getScores(roomCode);
+    //console.log("Fetching scores for room code:", roomCode);
     res.json({
-      message: "Scores fetched successfully",
-      scores: scores.scores || [],
-      totalScores: scores.totalResults || [],
+      scores: scores.scores || [],//if undefined, return empty array. To avoid frontend crashing if empty
+      totalScores:  scores.totalResults || [],
     });
   } catch (error) {
     console.error(error);
@@ -26,7 +25,7 @@ async function revealNext(req, res) {
 
     res.json({ message: "Reveal successful" });
   } catch (err) {
-    console.error(err); // 👈 keep this for debugging
+    console.error(err); 
     res.status(400).json({ error: err.message });
   }
 }
